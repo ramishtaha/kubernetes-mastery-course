@@ -5,13 +5,18 @@
 [![GitHub Issues](https://img.shields.io/github/issues/ramishtaha/kubernetes-mastery-course?style=for-the-badge)](https://github.com/ramishtaha/kubernetes-mastery-course/issues)
 [![License](https://img.shields.io/github/license/ramishtaha/kubernetes-mastery-course?style=for-the-badge)](LICENSE)
 
-> *| 📚 **Start Learning** | 🎯 **Jump to Projects** | 🔧 **Get Help** |
-|:---:|:---:|:---:|
-| [📖 Prerequisites](00-prerequisites/README.md) | [🟢 Beginner Projects](projects/01-beginner/README.md) | [❓ FAQ](FAQ.md) |
+>| [📖 Prerequisites](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) | [🟢 Beginner Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner) | [❓ FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md) |
 | Perfect for beginners | Hands-on learning | 50+ common questions |
-| [⚙️ Installation Guide](01-installation/README.md) | [🟡 Intermediate Projects](projects/02-intermediate/README.md) | [🔍 Troubleshooting](troubleshooting/README.md) |
+| [⚙️ Installation Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/01-installation) | [🟡 Intermediate Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/02-intermediate) | [🔍 Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting) |
 | Ubuntu Server setup | Advanced concepts | Problem-solving guide |
-| [🏃 Quick Start](QUICK_START.md) | [🔴 Advanced Projects](projects/03-advanced/README.md) | [📊 Progress Tracker](PROGRESS.md) |
+| [🏃 Quick Start](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/QUICK_START.md) | [🔴 Advanced Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/03-advanced) | [� Progress Tracker](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/PROGRESS.md) |
+| 5-minute setup | Production-ready | Track your journey | **Start Learning** | 🎯 **Jump to Projects** | 🔧 **Get Help** |
+|:---:|:---:|:---:|
+| [📖 Prerequisites](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) | [🟢 Beginner Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner) | [❓ FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md) |
+| Perfect for beginners | Hands-on learning | 50+ common questions |
+| [⚙️ Installation Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/01-installation) | [🟡 Intermediate Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/02-intermediate) | [🔍 Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting) |
+| Ubuntu Server setup | Advanced concepts | Problem-solving guide |
+| [🏃 Quick Start](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/QUICK_START.md) | [🔴 Advanced Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/03-advanced) | [📊 Progress Tracker](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/PROGRESS.md) |
 | 5-minute setup | Production-ready | Track your journey |t comprehensive, production-ready Kubernetes learning experience on GitHub**
 
 🎯 **Zero to Kubernetes Expert in 183-265 Hours** | 🔥 **18 Progressive Projects** | 📚 **13 Learning Modules** | 🛠️ **Production-Ready Manifests**
@@ -60,21 +65,15 @@ chmod +x scripts/*.sh
 ./scripts/quick-setup.sh
 
 # 3. Deploy your first application
-cd projects/01-beginner/01-simple-web-app
-./scripts/deploy.sh
+./projects/01-beginner/01-simple-web-app/scripts/deploy.sh
 ```
 
 ### Option 2: Step-by-Step Learning
-```bash
-# Start with prerequisites and theory
-cd 00-prerequisites && cat README.md
 
-# Follow the complete installation guide
-cd ../01-installation && cat README.md
-
-# Begin hands-on projects
-cd ../projects/01-beginner/01-simple-web-app && cat README.md
-```
+**📖 Follow the learning path online**:
+1. [📋 Prerequisites Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) - Foundation knowledge & Docker basics
+2. [⚙️ Installation Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/01-installation) - Complete Ubuntu Server setup
+3. [🚀 First Project](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner/01-simple-web-app) - Deploy your first application
 
 ### Option 3: Production Setup
 ```bash
@@ -110,9 +109,9 @@ This course is designed as a **progressive learning journey**. Each section buil
 **📝 Checkpoint**: By the end of Phase 1, you should have a working Kubernetes cluster and understand the basic architecture.
 
 **🔗 Quick Links**: 
-- [Installation Scripts](scripts/install-all.sh)
-- [Troubleshooting Guide](troubleshooting/README.md)
-- [Quick Setup](scripts/quick-setup.sh)
+- [📦 Installation Scripts](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/scripts)
+- [🔍 Troubleshooting Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting)
+- [⚡ Quick Setup Script](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/scripts/quick-setup.sh)
 
 </details>
 
@@ -130,9 +129,9 @@ This course is designed as a **progressive learning journey**. Each section buil
 **📝 Checkpoint**: Deploy a multi-tier application with persistent storage and configuration management.
 
 **🔗 Quick Links**: 
-- [Basic Manifests](manifests/basic/)
-- [Storage Examples](examples/storage-examples/)
-- [Configuration Patterns](examples/configuration/)
+- [📋 Basic Manifests](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/basic)
+- [💾 Storage Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/storage-examples)
+- [🔧 Configuration Patterns](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/configuration)
 
 </details>
 
@@ -150,9 +149,9 @@ This course is designed as a **progressive learning journey**. Each section buil
 **📝 Checkpoint**: Secure a multi-service application with proper networking and monitoring.
 
 **🔗 Quick Links**: 
-- [Security Manifests](manifests/security/)
-- [Networking Examples](examples/networking-examples/)
-- [Monitoring Stack](manifests/monitoring/)
+- [🔒 Security Manifests](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/security)
+- [🌐 Networking Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/networking-examples)
+- [📊 Monitoring Stack](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/monitoring)
 
 </details>
 
@@ -170,9 +169,9 @@ This course is designed as a **progressive learning journey**. Each section buil
 **📝 Checkpoint**: Build and deploy a complete application using Helm charts and custom operators.
 
 **🔗 Quick Links**: 
-- [Helm Charts](examples/production-patterns/)
-- [Advanced Manifests](manifests/cicd/)
-- [Custom Operators Guide](10-advanced-concepts/README.md)
+- [📊 Helm Charts](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/production-patterns)
+- [🔄 Advanced Manifests](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/cicd)
+- [⚙️ Custom Operators Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/10-advanced-concepts)
 
 </details>
 
@@ -189,9 +188,9 @@ This course is designed as a **progressive learning journey**. Each section buil
 **📝 Checkpoint**: Deploy production-ready applications with monitoring, security, and CI/CD.
 
 **🔗 Quick Links**: 
-- [Production Manifests](manifests/multi-tier/)
-- [CI/CD Examples](manifests/cicd/)
-- [Enterprise Patterns](examples/production-patterns/)
+- [🏭 Production Manifests](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/multi-tier)
+- [🔄 CI/CD Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/cicd)
+- [🏢 Enterprise Patterns](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/production-patterns)
 
 </details>
 
@@ -202,7 +201,7 @@ Choose your preferred learning style:
 | 🎓 **Academic Path** | 🛠️ **Hands-on Path** | 🚀 **Fast Track** |
 |:---:|:---:|:---:|
 | **Theory First** | **Projects First** | **Production Ready** |
-| [Start with Prerequisites](00-prerequisites/README.md) | [Jump to Beginner Projects](projects/01-beginner/README.md) | [Quick Setup Script](scripts/quick-setup.sh) |
+| [📖 Start with Prerequisites](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) | [🟢 Jump to Beginner Projects](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner) | [⚡ Quick Setup Script](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/scripts/quick-setup.sh) |
 | Read all modules sequentially | Learn by doing projects | Deploy production workloads |
 | Complete assessments | Build real applications | Focus on enterprise patterns |
 | Perfect for structured learning | Perfect for practical learners | Perfect for experienced developers |
@@ -211,12 +210,12 @@ Choose your preferred learning style:
 
 | Resource Type | Quick Access | Description |
 |---------------|--------------|-------------|
-| **📖 Theory Modules** | [All Modules](00-prerequisites/) | 13 comprehensive learning modules |
-| **🎯 Projects** | [Project System](projects/README.md) | 18 progressive hands-on projects |
-| **📋 Manifests** | [Production YAMLs](manifests/README.md) | Ready-to-use Kubernetes configurations |
-| **💡 Examples** | [Quick References](examples/README.md) | Code snippets and patterns |
-| **🔧 Scripts** | [Automation Tools](scripts/README.md) | Setup, troubleshooting, and management |
-| **🆘 Help** | [FAQ & Troubleshooting](FAQ.md) | Common issues and solutions |
+| **📖 Theory Modules** | [📚 All Modules](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) | 13 comprehensive learning modules |
+| **🎯 Projects** | [🚀 Project System](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects) | 18 progressive hands-on projects |
+| **📋 Manifests** | [📋 Production YAMLs](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests) | Ready-to-use Kubernetes configurations |
+| **💡 Examples** | [💡 Quick References](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples) | Code snippets and patterns |
+| **🔧 Scripts** | [🔧 Automation Tools](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/scripts) | Setup, troubleshooting, and management |
+| **🆘 Help** | [❓ FAQ & Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md) | Common issues and solutions |
 
 ---
 
@@ -367,14 +366,10 @@ free -h && df -h && nproc
 1. **Clone this repository**:
    ```bash
    git clone https://github.com/ramishtaha/kubernetes-mastery-course.git
-   cd kubernetes-mastery-course
    ```
 
 2. **Start with the installation guide**:
-   ```bash
-   cd 01-installation
-   cat README.md
-   ```
+   **📖 Read online**: [Installation Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/01-installation)
 
 3. **Follow the learning path sequentially**:
    - Each directory contains theory, examples, and hands-on labs
@@ -382,10 +377,7 @@ free -h && df -h && nproc
    - Track your progress using the [PROGRESS.md](PROGRESS.md) checklist
 
 4. **Start hands-on projects**:
-   ```bash
-   cd projects/01-beginner/01-simple-web-app
-   cat README.md
-   ```
+   **📖 Project guide**: [Simple Web App Project](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner/01-simple-web-app)
 
 5. **Use provided scripts for setup and troubleshooting**:
    ```bash
@@ -607,44 +599,44 @@ kubectl explain pod
 <details>
 <summary><strong>🚀 Installation & Setup Help</strong></summary>
 
-- [📋 Prerequisites Checklist](00-prerequisites/README.md)
-- [⚙️ Installation Guide](01-installation/README.md) 
-- [🔧 Setup Scripts](scripts/README.md)
-- [❓ Installation FAQ](FAQ.md#installation)
-- [🔍 Common Setup Issues](troubleshooting/README.md#installation-issues)
+- [📋 Prerequisites Checklist](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites)
+- [⚙️ Installation Guide](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/01-installation) 
+- [🔧 Setup Scripts](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/scripts)
+- [❓ Installation FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md#installation)
+- [🔍 Common Setup Issues](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting#installation-issues)
 
 </details>
 
 <details>
 <summary><strong>🏃 Workloads & Applications Help</strong></summary>
 
-- [📱 Basic Workloads](examples/basic-workloads/)
-- [🏗️ Multi-tier Examples](manifests/multi-tier/)
-- [🔧 Configuration Patterns](examples/configuration/)
-- [❓ Workloads FAQ](FAQ.md#workloads)
-- [🔍 Application Troubleshooting](troubleshooting/README.md#application-issues)
+- [📱 Basic Workloads](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/basic-workloads)
+- [🏗️ Multi-tier Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/multi-tier)
+- [🔧 Configuration Patterns](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/configuration)
+- [❓ Workloads FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md#workloads)
+- [🔍 Application Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting#application-issues)
 
 </details>
 
 <details>
 <summary><strong>🌐 Networking & Security Help</strong></summary>
 
-- [🌐 Networking Examples](examples/networking-examples/)
-- [🔒 Security Patterns](examples/security-examples/)
-- [📋 Security Manifests](manifests/security/)
-- [❓ Networking FAQ](FAQ.md#networking)
-- [🔍 Network Troubleshooting](troubleshooting/README.md#networking-issues)
+- [🌐 Networking Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/networking-examples)
+- [🔒 Security Patterns](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/security-examples)
+- [📋 Security Manifests](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/security)
+- [❓ Networking FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md#networking)
+- [🔍 Network Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting#networking-issues)
 
 </details>
 
 <details>
 <summary><strong>📊 Monitoring & Observability Help</strong></summary>
 
-- [📊 Monitoring Examples](examples/monitoring-examples/)
-- [🔧 Monitoring Stack](manifests/monitoring/)
-- [📈 Scaling Examples](examples/scaling-examples/)
-- [❓ Monitoring FAQ](FAQ.md#monitoring)
-- [🔍 Performance Troubleshooting](troubleshooting/README.md#performance-issues)
+- [📊 Monitoring Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/monitoring-examples)
+- [🔧 Monitoring Stack](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/manifests/monitoring)
+- [📈 Scaling Examples](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/examples/scaling-examples)
+- [❓ Monitoring FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md#monitoring)
+- [🔍 Performance Troubleshooting](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/troubleshooting#performance-issues)
 
 </details>
 
@@ -712,20 +704,12 @@ Each learning module has its own help section:
 
 ### 💡 **Quick Tips for Success**
 
-```bash
-```bash
-# 🎯 Set up your environment first
-./scripts/quick-setup.sh
+**🎯 Set up your environment first**: Run `./scripts/quick-setup.sh`
 
-# 📚 Follow the learning path sequentially  
-cd 00-prerequisites && cat README.md
+**📚 Follow the learning path**: 
+- [Prerequisites](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/00-prerequisites) → [Simple Web App](https://github.com/ramishtaha/kubernetes-mastery-course/tree/main/projects/01-beginner/01-simple-web-app)
 
-# 🚀 Start with a simple project
-cd projects/01-beginner/01-simple-web-app
-
-# 🔍 When stuck, use troubleshooting tools
-./scripts/troubleshoot.sh
-```
+**🔍 When stuck**: Use `./scripts/troubleshoot.sh` or check the [FAQ](https://github.com/ramishtaha/kubernetes-mastery-course/blob/main/FAQ.md)
 ```
 
 ### 🌟 **What Makes This Special?**
