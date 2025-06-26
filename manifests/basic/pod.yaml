@@ -1,0 +1,29 @@
+# Basic Pod Example
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+    tier: frontend
+  annotations:
+    description: "Basic nginx pod example"
+    contact: "learning@kubernetes.io"
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+      name: http
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+    env:
+    - name: NGINX_PORT
+      value: "80"
+  restartPolicy: Always

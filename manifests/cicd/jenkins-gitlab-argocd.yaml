@@ -1,0 +1,785 @@
+# Complete CI/CD Pipeline with Jenkins, GitLab Runner, and ArgoCD
+# This manifest demonstrates:
+# - Jenkins for CI/CD orchestration
+# - GitLab Runner for GitLab CI/CD
+# - ArgoCD for GitOps deployment
+# - Docker registry for image storage
+# - Sample pipeline configurations
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cicd
+  labels:
+    name: cicd
+
+---
+# Jenkins PVC for persistent data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc
+  namespace: cicd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# Jenkins ConfigMap for initial configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-config
+  namespace: cicd
+data:
+  jenkins.yaml: |
+    jenkins:
+      systemMessage: "Welcome to Kubernetes Learning Project Jenkins"
+      numExecutors: 2
+      mode: NORMAL
+      scmCheckoutRetryCount: 3
+      
+    security:
+      globalJobDslSecurityConfiguration:
+        useScriptSecurity: false
+    
+    unclassified:
+      location:
+        adminAddress: "admin@example.com"
+        url: "http://jenkins.cicd.svc.cluster.local:8080"
+      
+      gitLabConnectionConfig:
+        connections:
+        - name: "gitlab"
+          url: "https://gitlab.com"
+          apiTokenId: "gitlab-token"
+          
+    jobs:
+      - script: |
+          pipelineJob('sample-app-pipeline') {
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/your-repo/sample-app.git')
+                    }
+                    branch('*/main')
+                  }
+                }
+                scriptPath('Jenkinsfile')
+              }
+            }
+          }
+
+  plugins.txt: |
+    kubernetes:3900.va_dce992317b_4
+    workflow-aggregator:590.v6a_d052e5a_a_b_5
+    git:4.13.0
+    configuration-as-code:1569.vb_72405b_80249
+    docker-workflow:563.vd5d2e5c4007f
+    pipeline-stage-view:2.25
+    blueocean:1.25.2
+    gitlab-plugin:1.7.8
+    kubernetes-credentials-provider:1.211.vc236a_f5a_2f3c
+
+---
+# Jenkins Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: cicd
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:2.414.2-lts
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        env:
+        - name: JAVA_OPTS
+          value: "-Djenkins.install.runSetupWizard=false"
+        - name: CASC_JENKINS_CONFIG
+          value: "/var/jenkins_config/jenkins.yaml"
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+        - name: jenkins-config
+          mountPath: /var/jenkins_config
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 10
+      volumes:
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+      - name: jenkins-config
+        configMap:
+          name: jenkins-config
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+
+---
+# Jenkins Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: cicd
+  labels:
+    app: jenkins
+spec:
+  selector:
+    app: jenkins
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: agent
+    port: 50000
+    targetPort: 50000
+  type: ClusterIP
+
+---
+# Jenkins ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins
+  namespace: cicd
+
+---
+# Jenkins ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: jenkins
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+
+---
+# Jenkins ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jenkins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: jenkins
+subjects:
+- kind: ServiceAccount
+  name: jenkins
+  namespace: cicd
+
+---
+# GitLab Runner ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlab-runner-config
+  namespace: cicd
+data:
+  config.toml: |
+    concurrent = 4
+    check_interval = 3
+    log_level = "info"
+    
+    [session_server]
+      session_timeout = 1800
+    
+    [[runners]]
+      name = "kubernetes-runner"
+      url = "https://gitlab.com/"
+      token = "YOUR_GITLAB_RUNNER_TOKEN"
+      executor = "kubernetes"
+      [runners.kubernetes]
+        host = ""
+        bearer_token_overwrite_allowed = false
+        image = "ubuntu:20.04"
+        namespace = "cicd"
+        privileged = false
+        service_account_overwrite_allowed = ""
+        pod_labels_overwrite_allowed = ""
+        pod_annotations_overwrite_allowed = ""
+        [runners.kubernetes.volumes]
+
+---
+# GitLab Runner Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab-runner
+  namespace: cicd
+  labels:
+    app: gitlab-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab-runner
+  template:
+    metadata:
+      labels:
+        app: gitlab-runner
+    spec:
+      serviceAccountName: gitlab-runner
+      containers:
+      - name: gitlab-runner
+        image: gitlab/gitlab-runner:alpine-v15.5.0
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/gitlab-runner
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        env:
+        - name: RUNNER_EXECUTOR
+          value: "kubernetes"
+      volumes:
+      - name: config
+        configMap:
+          name: gitlab-runner-config
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+
+---
+# GitLab Runner ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gitlab-runner
+  namespace: cicd
+
+---
+# GitLab Runner ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gitlab-runner
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "get", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["list", "get", "create", "delete"]
+
+---
+# GitLab Runner ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gitlab-runner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gitlab-runner
+subjects:
+- kind: ServiceAccount
+  name: gitlab-runner
+  namespace: cicd
+
+---
+# ArgoCD Installation (using existing ArgoCD namespace)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  labels:
+    name: argocd
+
+---
+# ArgoCD Server Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+  namespace: argocd
+  labels:
+    app: argocd-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argocd-server
+  template:
+    metadata:
+      labels:
+        app: argocd-server
+    spec:
+      serviceAccountName: argocd-server
+      containers:
+      - name: argocd-server
+        image: quay.io/argoproj/argocd:v2.8.0
+        command:
+        - argocd-server
+        - --staticassets
+        - /shared/app
+        - --insecure
+        ports:
+        - containerPort: 8080
+        - containerPort: 8083
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+---
+# ArgoCD Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server
+  namespace: argocd
+  labels:
+    app: argocd-server
+spec:
+  selector:
+    app: argocd-server
+  ports:
+  - name: server
+    port: 80
+    targetPort: 8080
+  - name: grpc
+    port: 443
+    targetPort: 8080
+  type: ClusterIP
+
+---
+# ArgoCD ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-server
+  namespace: argocd
+
+---
+# ArgoCD ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-server
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+- nonResourceURLs: ["*"]
+  verbs: ["*"]
+
+---
+# ArgoCD ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argocd-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argocd-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: argocd
+
+---
+# Docker Registry for storing built images
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry
+  namespace: cicd
+  labels:
+    app: docker-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-registry
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2.8
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        env:
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: /var/lib/registry
+        volumeMounts:
+        - name: registry-storage
+          mountPath: /var/lib/registry
+      volumes:
+      - name: registry-storage
+        emptyDir: {}
+
+---
+# Docker Registry Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-registry
+  namespace: cicd
+  labels:
+    app: docker-registry
+spec:
+  selector:
+    app: docker-registry
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP
+
+---
+# Sample Application ConfigMap with Jenkinsfile
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-jenkinsfile
+  namespace: cicd
+data:
+  Jenkinsfile: |
+    pipeline {
+        agent {
+            kubernetes {
+                yaml '''
+                apiVersion: v1
+                kind: Pod
+                spec:
+                  containers:
+                  - name: docker
+                    image: docker:20.10.17-dind
+                    securityContext:
+                      privileged: true
+                    volumeMounts:
+                    - name: docker-sock
+                      mountPath: /var/run/docker.sock
+                  - name: kubectl
+                    image: bitnami/kubectl:latest
+                    command:
+                    - sleep
+                    args:
+                    - 99d
+                  volumes:
+                  - name: docker-sock
+                    hostPath:
+                      path: /var/run/docker.sock
+                '''
+            }
+        }
+        
+        environment {
+            DOCKER_REGISTRY = 'docker-registry.cicd.svc.cluster.local:5000'
+            IMAGE_NAME = 'sample-app'
+            IMAGE_TAG = "${BUILD_NUMBER}"
+        }
+        
+        stages {
+            stage('Checkout') {
+                steps {
+                    checkout scm
+                }
+            }
+            
+            stage('Build') {
+                steps {
+                    container('docker') {
+                        script {
+                            sh '''
+                            echo "FROM nginx:alpine" > Dockerfile
+                            echo "COPY index.html /usr/share/nginx/html/" >> Dockerfile
+                            echo "<h1>Sample App - Build ${BUILD_NUMBER}</h1>" > index.html
+                            
+                            docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+                            docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest .
+                            '''
+                        }
+                    }
+                }
+            }
+            
+            stage('Push') {
+                steps {
+                    container('docker') {
+                        script {
+                            sh '''
+                            docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                            docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest
+                            '''
+                        }
+                    }
+                }
+            }
+            
+            stage('Deploy') {
+                steps {
+                    container('kubectl') {
+                        script {
+                            sh '''
+                            cat <<EOF | kubectl apply -f -
+                            apiVersion: apps/v1
+                            kind: Deployment
+                            metadata:
+                              name: sample-app
+                              namespace: default
+                            spec:
+                              replicas: 3
+                              selector:
+                                matchLabels:
+                                  app: sample-app
+                              template:
+                                metadata:
+                                  labels:
+                                    app: sample-app
+                                spec:
+                                  containers:
+                                  - name: sample-app
+                                    image: ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                                    ports:
+                                    - containerPort: 80
+                            ---
+                            apiVersion: v1
+                            kind: Service
+                            metadata:
+                              name: sample-app
+                              namespace: default
+                            spec:
+                              selector:
+                                app: sample-app
+                              ports:
+                              - port: 80
+                                targetPort: 80
+                              type: ClusterIP
+                            EOF
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        
+        post {
+            always {
+                echo 'Pipeline completed!'
+            }
+            success {
+                echo 'Pipeline succeeded!'
+            }
+            failure {
+                echo 'Pipeline failed!'
+            }
+        }
+    }
+
+  gitlab-ci.yml: |
+    stages:
+      - build
+      - test
+      - deploy
+    
+    variables:
+      DOCKER_REGISTRY: docker-registry.cicd.svc.cluster.local:5000
+      IMAGE_NAME: sample-app
+      KUBECTL_VERSION: "1.28.0"
+    
+    before_script:
+      - echo "Starting CI/CD pipeline..."
+    
+    build:
+      stage: build
+      image: docker:20.10.17
+      services:
+        - docker:20.10.17-dind
+      script:
+        - echo "FROM nginx:alpine" > Dockerfile
+        - echo "COPY index.html /usr/share/nginx/html/" >> Dockerfile
+        - echo "<h1>Sample App - GitLab CI Build ${CI_PIPELINE_ID}</h1>" > index.html
+        - docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${CI_PIPELINE_ID} .
+        - docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest .
+        - docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${CI_PIPELINE_ID}
+        - docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest
+      only:
+        - main
+    
+    test:
+      stage: test
+      image: alpine:latest
+      script:
+        - echo "Running tests..."
+        - echo "All tests passed!"
+      only:
+        - main
+    
+    deploy:
+      stage: deploy
+      image: bitnami/kubectl:${KUBECTL_VERSION}
+      script:
+        - |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: sample-app-gitlab
+            namespace: default
+          spec:
+            replicas: 3
+            selector:
+              matchLabels:
+                app: sample-app-gitlab
+            template:
+              metadata:
+                labels:
+                  app: sample-app-gitlab
+              spec:
+                containers:
+                - name: sample-app
+                  image: ${DOCKER_REGISTRY}/${IMAGE_NAME}:${CI_PIPELINE_ID}
+                  ports:
+                  - containerPort: 80
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: sample-app-gitlab
+            namespace: default
+          spec:
+            selector:
+              app: sample-app-gitlab
+            ports:
+            - port: 80
+              targetPort: 80
+            type: ClusterIP
+          EOF
+      only:
+        - main
+      when: manual
+
+---
+# Ingress for CI/CD Services
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cicd-ingress
+  namespace: cicd
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: cicd.local
+    http:
+      paths:
+      - path: /jenkins
+        pathType: Prefix
+        backend:
+          service:
+            name: jenkins
+            port:
+              number: 8080
+      - path: /registry
+        pathType: Prefix
+        backend:
+          service:
+            name: docker-registry
+            port:
+              number: 5000
+  - host: argocd.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80

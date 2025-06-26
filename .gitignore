@@ -1,0 +1,131 @@
+# Kubernetes Learning Project - .gitignore
+
+# Kubernetes configuration files (may contain sensitive data)
+*.kubeconfig
+**/admin.conf
+**/kubelet.conf
+**/controller-manager.conf
+**/scheduler.conf
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+*.out
+
+# Personal notes and progress
+personal-notes.md
+my-progress.md
+.personal/
+
+# Backup files
+*.bak
+*.backup
+*-backup.*
+
+# IDE and editor files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Downloaded packages and binaries
+node_modules/
+*.tar.gz
+*.zip
+*.deb
+*.rpm
+
+# Certificates and keys (security)
+*.key
+*.crt
+*.pem
+ca.key
+ca.crt
+server.key
+server.crt
+
+# etcd backup files
+etcd-backup-*
+*.db
+
+# Terraform files (if used for infrastructure)
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+
+# Helm
+.helm/
+
+# Local testing artifacts
+test-results/
+coverage/
+.nyc_output/
+
+# Docker
+.dockerignore
+
+# Local cluster data
+cluster-data/
+etcd-data/
+
+# Custom scripts (that might contain sensitive info)
+custom-install.sh
+local-config.sh
+
+# Generated manifests
+generated/
+output/
+
+# Sensitive files that shouldn't be committed
+secrets.yaml
+*-secret.yaml
+*-secrets.yaml
+token.txt
+join-command.txt
+
+# Local development
+dev/
+development/
+sandbox/
+
+# Documentation builds
+site/
+docs/_site/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Go
+vendor/
+
+# Java
+*.class
+*.jar
+
+# System files
+*.pid
